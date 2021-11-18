@@ -1,27 +1,24 @@
-
-import express from 'express';
+import express from "express";
 
 const app = express();
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }))
+app.use(express.urlencoded({ extended: true }));
 const port = 8080;
 
 //mongodb config
 import mongoose from "mongoose";
-const mongoDB = 'mongodb://localhost/demoMongo'
+const mongoDB = "mongodb://localhost/demoMongo";
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
-const db = mongoose.connection
-db.on('error', console.error.bind(console, 'Mongoose error: '))
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "Mongoose error: "));
 
-//controller de estudiantes
-import * as controllerEstudiantes from './controllers/estudiantes.controller.js'
+//routers
+import { router as estudiantesRouter } from "./routers/estudiantes.router.js";
+import { router as modulosRouter } from "./routers/modulos.router.js";
 
-app.get('/', controllerEstudiantes.get)
-app.get('/:id', controllerEstudiantes.getById)
-app.post('/', controllerEstudiantes.add)
-app.put('/:id', controllerEstudiantes.update)
-app.delete('/:id', controllerEstudiantes.deleteById)
+app.use("/estudiantes", estudiantesRouter);
+app.use("/modulos", modulosRouter);
 
 app.listen(port, () => {
-    console.log('listening on port ' + port);
-})
+  console.log("listening on port " + port);
+});
